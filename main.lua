@@ -6,7 +6,7 @@ function love.load()
 	fBirdPosition = 0.0
 	fBirdVelocity = 0.0
 	fBirdAcceleration = 0.0
-	fGravity = 200.0
+	fGravity = 1000.0
 	fLevelPosition = 1500.0 
 
 	fSectionWidth = 0.0
@@ -42,12 +42,17 @@ function love.load()
 
     input = Input()
     input:bind('space', 'space')
+    input:bind('up', 'up')
     input:bind('1', '1')
     input:bind('2', '2')
     input:bind('3', '3')
     input:bind('4', '4')
     input:bind('5', '5')
     input:bind('6', '6')
+    input:bind('7', '7')
+    input:bind('8', '8')
+    input:bind('9', '9')
+    input:bind('0', '0')
     input:bind('escape', 'escape')
 
     PIPE_IMG = love.graphics.newImage("assets/sprite/pipe-red.png")
@@ -81,15 +86,16 @@ function love.update(dt)
     if bHasCollided then
         -- Do nothing until user releases space
         bGameOver = true
-        if input:released("space") then 
+        if input:released("space") or input:released("up") or love.mouse.isDown(1) then
             bResetGame = true 
         end
     elseif not bGameOver then
-        if input:pressed("space") and (fBirdVelocity >= (fGravity / 40.0) )then
+        --if input:pressed("space") and (fBirdVelocity >= (fGravity / 40.0) )then
+        if input:pressed("space") or input:pressed("up") or love.mouse.isDown(1) then
             sounds.wing:play()
             fBirdAcceleration = 0.0
             --fBirdVelocity = -fGravity / 2
-            fBirdVelocity = -100
+            fBirdVelocity = -130
             nFlapCount = nFlapCount + 1
             if nFlapCount > nMaxFlapCount then 
                 nMaxFlapCount = nFlapCount
@@ -222,15 +228,23 @@ function handlePlayerInput()
     if input:released("1") then 
         fGravity = 100
     elseif input:released("2") then
-        fGravity = 200
-    elseif input:released("3") then
-        fGravity = 300
-    elseif input:released("4") then
         fGravity = 400
-    elseif input:released("5") then
-        fGravity = 500
-    elseif input:released("6") then
+    elseif input:released("3") then
         fGravity = 600
+    elseif input:released("4") then
+        fGravity = 800
+    elseif input:released("5") then
+        fGravity = 1000
+    elseif input:released("6") then
+        fGravity = 1200
+    elseif input:released("7") then
+        fGravity = 1400
+    elseif input:released("8") then
+        fGravity = 1600
+    elseif input:released("9") then
+        fGravity = 1800
+    elseif input:released("0") then
+        fGravity = 2000
     elseif input:released("escape") then
         love.event.quit()
     end
