@@ -41,8 +41,9 @@ function love.load()
     sounds.wing:setVolume(1)
 
     input = Input()
-    input:bind('space', 'space')
-    input:bind('up', 'up')
+    input:bind('space', 'push_bird')
+    input:bind('up', 'push_bird')
+    input:bind('mouse1', 'push_bird')
     input:bind('1', '1')
     input:bind('2', '2')
     input:bind('3', '3')
@@ -86,12 +87,11 @@ function love.update(dt)
     if bHasCollided then
         -- Do nothing until user releases space
         bGameOver = true
-        if input:released("space") or input:released("up") or love.mouse.isDown(1) then
+        if input:released('push_bird') then
             bResetGame = true 
         end
     elseif not bGameOver then
-        --if input:pressed("space") and (fBirdVelocity >= (fGravity / 40.0) )then
-        if input:pressed("space") or input:pressed("up") or love.mouse.isDown(1) then
+        if input:released('push_bird') then
             sounds.wing:play()
             fBirdAcceleration = 0.0
             --fBirdVelocity = -fGravity / 2
@@ -225,27 +225,19 @@ function checkCollision()
 end
 
 function handlePlayerInput()
-    if input:released("1") then 
-        fGravity = 100
-    elseif input:released("2") then
-        fGravity = 400
-    elseif input:released("3") then
-        fGravity = 600
-    elseif input:released("4") then
-        fGravity = 800
-    elseif input:released("5") then
-        fGravity = 1000
-    elseif input:released("6") then
-        fGravity = 1200
-    elseif input:released("7") then
-        fGravity = 1400
-    elseif input:released("8") then
-        fGravity = 1600
-    elseif input:released("9") then
-        fGravity = 1800
-    elseif input:released("0") then
-        fGravity = 2000
-    elseif input:released("escape") then
+    handleBirdGravity()
+    if input:released("escape") then
         love.event.quit()
+    end
+end
+
+function handleBirdGravity()
+    local gravities = {['1'] = 100, ['2'] = 400, ['3'] = 600, ['4'] = 800, ['5'] = 1000, ['6'] = 1200,
+                       ['7'] = 1400,['8'] = 1600,['9'] = 1800,['0'] = 2000}
+
+    for key, value in pairs(gravities) do
+        if input:released(key) then
+            fGravity = value
+        end
     end
 end
