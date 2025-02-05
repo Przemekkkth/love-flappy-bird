@@ -6,7 +6,7 @@ function love.load()
 	fBirdPosition = 0.0
 	fBirdVelocity = 0.0
 	fBirdAcceleration = 0.0
-	fGravity = 200.0
+	fGravity = 1000.0
 	fLevelPosition = 1500.0 
 
 	fSectionWidth = 0.0
@@ -41,13 +41,12 @@ function love.load()
     sounds.wing:setVolume(1)
 
     input = Input()
-    input:bind('space', 'space')
-    input:bind('1', '1')
-    input:bind('2', '2')
-    input:bind('3', '3')
-    input:bind('4', '4')
-    input:bind('5', '5')
-    input:bind('6', '6')
+    input:bind('space', 'push_bird')
+    input:bind('up', 'push_bird')
+    input:bind('mouse1', 'push_bird')
+    for difficultyKeybind = 0, 9 do
+        input:bind(tostring(difficultyKeybind), tostring(difficultyKeybind))
+    end
     input:bind('escape', 'escape')
 
     PIPE_IMG = love.graphics.newImage("assets/sprite/pipe-red.png")
@@ -81,15 +80,14 @@ function love.update(dt)
     if bHasCollided then
         -- Do nothing until user releases space
         bGameOver = true
-        if input:released("space") then 
+        if input:released('push_bird') then
             bResetGame = true 
         end
     elseif not bGameOver then
-        if input:pressed("space") and (fBirdVelocity >= (fGravity / 40.0) )then
+        if input:released('push_bird') then
             sounds.wing:play()
             fBirdAcceleration = 0.0
-            --fBirdVelocity = -fGravity / 2
-            fBirdVelocity = -100
+            fBirdVelocity = -130
             nFlapCount = nFlapCount + 1
             if nFlapCount > nMaxFlapCount then 
                 nMaxFlapCount = nFlapCount
@@ -219,19 +217,19 @@ function checkCollision()
 end
 
 function handlePlayerInput()
-    if input:released("1") then 
-        fGravity = 100
-    elseif input:released("2") then
-        fGravity = 200
-    elseif input:released("3") then
-        fGravity = 300
-    elseif input:released("4") then
-        fGravity = 400
-    elseif input:released("5") then
-        fGravity = 500
-    elseif input:released("6") then
-        fGravity = 600
-    elseif input:released("escape") then
+    handleBirdGravity()
+    if input:released("escape") then
         love.event.quit()
+    end
+end
+
+function handleBirdGravity()
+    local gravities = {['1'] = 100, ['2'] = 400, ['3'] = 600, ['4'] = 800, ['5'] = 1000, ['6'] = 1200,
+                       ['7'] = 1400,['8'] = 1600,['9'] = 1800,['0'] = 2000}
+
+    for key, value in pairs(gravities) do
+        if input:released(key) then
+            fGravity = value
+        end
     end
 end
