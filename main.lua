@@ -87,7 +87,6 @@ function love.update(dt)
         if input:released('push_bird') then
             sounds.wing:play()
             fBirdAcceleration = 0.0
-            --fBirdVelocity = -fGravity / 2
             fBirdVelocity = -130
             nFlapCount = nFlapCount + 1
             if nFlapCount > nMaxFlapCount then 
