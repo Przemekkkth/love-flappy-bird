@@ -44,7 +44,7 @@ function love.load()
     input:bind('space', 'push_bird')
     input:bind('up', 'push_bird')
     input:bind('mouse1', 'push_bird')
-    for difficultyKeybind = 0, 10 do
+    for difficultyKeybind = 0, 9 do
         input:bind(tostring(difficultyKeybind), tostring(difficultyKeybind))
     end
     input:bind('escape', 'escape')
